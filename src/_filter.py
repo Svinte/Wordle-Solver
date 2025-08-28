@@ -64,7 +64,7 @@ def match(word, guess, result, scheme='performance'):
     else:
         raise ValueError("scheme must be 1 or 2")
 
-def filter_words(words, guesses, scheme=2):
+def filter_words(words, guesses, scheme='performance'):
     """
     Filter words by guesses using selected scheme.
 
