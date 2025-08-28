@@ -1,4 +1,5 @@
 def match(word, guess, result):
+from collections import Counter
     """
     Check if the word matches the guess with the given result.
     """
