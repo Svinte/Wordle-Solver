@@ -8,9 +8,11 @@ def match_scheme_old(word, guess, result):
     for i in range(5):
         if result[i] == "g" and word[i] != guess[i]:
             return False
+
         if result[i] == "y":
             if guess[i] == word[i] or guess[i] not in word:
                 return False
+
         if result[i] == "b" and guess[i] in word:
             return False
 
