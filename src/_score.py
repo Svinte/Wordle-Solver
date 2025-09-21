@@ -40,7 +40,7 @@ def score_words(words, green_weight=1.0, yellow_weight=1.0):
     for word in words:
         unique_letters = set(word)
         yellow_score = sum(freqs_yellow[l] for l in unique_letters)
-        green_score = freqs_green[word]
+        green_score = freqs_green.get(word, 0)
         total_score = yellow_score * yellow_weight + green_score * green_weight
         scored.append((word, total_score))
 

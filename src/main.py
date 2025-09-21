@@ -1,14 +1,15 @@
-import sys
-from _filter import filter_words
+from _filter import filter_words, filter_candidates_by_comparison
 from _common import top_letters
 from _score import score_words
 
-if len(sys.argv) < 2:
-    print("Usage: python main.py wordlist.txt")
-    sys.exit(1)
+ANSWER_LIST_PATH = 'src/wordlist.txt'
+QUESS_LIST_PATH = 'src/wordlist2.txt'
 
-with open(sys.argv[1], "r", encoding="utf-8") as f:
-    words = [w.strip().lower() for w in f if len(w.strip()) == 5]
+with open(ANSWER_LIST_PATH, "r", encoding="utf-8") as f:
+    all_possible_inputs = [w.strip().lower() for w in f if len(w.strip()) == 5]
+
+with open(ANSWER_LIST_PATH, "r", encoding="utf-8") as f:
+    answers = [w.strip().lower() for w in f if len(w.strip()) == 5]
 
 # Previous guesses and their results
 # g = green, y = yellow, b = gray
@@ -16,10 +17,14 @@ guesses = [
     # eg. ("irate", "bybbg")
 ]
 
-candidates = filter_words(words, guesses)
+comparing = [
+]
+
+candidates = filter_words(answers, guesses)
+candidates = filter_candidates_by_comparison(candidates, all_possible_inputs, comparing)
 
 print("Possible words:", len(candidates))
-print(candidates[:5])
+print(candidates[:30])
 
 letter_freqs = top_letters(candidates, top=len(set(''.join(candidates))))
 print("Letter frequencies:")
