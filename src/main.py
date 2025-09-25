@@ -19,8 +19,11 @@ guesses = [
 
 comparing = [
 ]
+contains = [
+]
 
-candidates = filter_words(answers, guesses)
+candidates = [ans for ans in answers if all(k in ans for k in contains)]
+candidates = filter_words(candidates, guesses)
 candidates = filter_candidates_by_comparison(candidates, all_possible_inputs, comparing)
 
 print("Possible words:", len(candidates))
