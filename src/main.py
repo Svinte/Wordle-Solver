@@ -5,7 +5,7 @@ from _score import score_words
 ANSWER_LIST_PATH = 'src/wordlist.txt'
 QUESS_LIST_PATH = 'src/wordlist2.txt'
 
-with open(ANSWER_LIST_PATH, "r", encoding="utf-8") as f:
+with open(QUESS_LIST_PATH, "r", encoding="utf-8") as f:
     all_possible_inputs = [w.strip().lower() for w in f if len(w.strip()) == 5]
 
 with open(ANSWER_LIST_PATH, "r", encoding="utf-8") as f:
