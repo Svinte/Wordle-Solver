@@ -18,8 +18,11 @@ guesses = [
 ]
 
 comparing = [
+    # eg. "bggby"
 ]
+
 contains = [
+    # eg. "a"
 ]
 
 candidates = [ans for ans in answers if all(k in ans for k in contains)]
