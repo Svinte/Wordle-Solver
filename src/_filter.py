@@ -57,31 +57,28 @@ def match_scheme_comparison(candidate: str, word_list: list[str], rules: list[st
         if not m:
             raise ValueError(f"Invalid rule: {raw_rule}")
 
-        rule, required_count = m.groups()
+        pattern, required_count = m.groups()
         required_count = int(required_count) if required_count else 1
 
         match_count = 0
 
         for word in word_list:
             word = word.lower()
+            feedback = ["b"] * 5
+            answer_counts = Counter(candidate)
 
-            g_match = all(word[i] == candidate[i] for i, r in enumerate(rule) if r == 'g')
+            for i in range(5):
+                if word[i] == candidate[i]:
+                    feedback[i] = "g"
+                    answer_counts[word[i]] -= 1
 
-            if not g_match:
-                continue
+            for i in range(5):
+                if feedback[i] == "b" and word[i] in answer_counts and answer_counts[word[i]] > 0:
+                    feedback[i] = "y"
+                    answer_counts[word[i]] -= 1
 
-            y_counts = Counter()
-            for i, r in enumerate(rule):
-                if r == 'y':
-                    y_counts[word[i]] += 1
-
-            candidate_counts = Counter(candidate)
-            y_match = all(candidate_counts[char] == count for char, count in y_counts.items())
-
-            if not y_match:
-                continue
-
-            match_count += 1
+            if "".join(feedback) == pattern:
+                match_count += 1
 
         if match_count < required_count:
             return False
