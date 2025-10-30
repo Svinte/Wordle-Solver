@@ -2,8 +2,8 @@ from _filter import filter_words, filter_candidates_by_comparison
 from _common import top_letters
 from _score import score_words
 
-ANSWER_LIST_PATH = 'src/wordlist.txt'
-QUESS_LIST_PATH = 'src/wordlist2.txt'
+ANSWER_LIST_PATH = 'storage/public/wordlist.txt'
+QUESS_LIST_PATH = 'storage/public/wordlist2.txt'
 
 with open(QUESS_LIST_PATH, "r", encoding="utf-8") as f:
     all_possible_inputs = [w.strip().lower() for w in f if len(w.strip()) == 5]
