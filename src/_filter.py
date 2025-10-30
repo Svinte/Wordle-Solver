@@ -85,12 +85,38 @@ def match_scheme_comparison(candidate: str, word_list: list[str], rules: list[st
 
     return True
 
+# -------------------------------
+# Rule filtering helpers
+# -------------------------------
+
+def consolidate_rules(rules: list[str]) -> list[str]:
+    counter = Counter()
+
+    for rule in rules:
+        m = re.match(r"([gyb]{5})(?:\*(\d+))?", rule.lower())
+
+        if not m:
+            raise ValueError(f"Invalid rule: {rule}")
+
+        pattern, count = m.groups()
+        count = int(count) if count else 1
+        counter[pattern] += count
+
+    consolidated = []
+    for pattern, count in counter.items():
+        if count > 1:
+            consolidated.append(f"{pattern}*{count}")
+
+        else:
+            consolidated.append(pattern)
+
+    return consolidated
 
 # -------------------------------
 # Generic match function
 # -------------------------------
 
-def match(word, guess, result, scheme='performance', wordlist=None):
+def match(word, guess, result, scheme='performance'):
     if scheme == 'old':
         return match_scheme_old(word, guess, result)
 
@@ -105,10 +131,12 @@ def match(word, guess, result, scheme='performance', wordlist=None):
 # -------------------------------
 
 def filter_candidates_by_comparison(candidates: list[str], word_list: list[str], rules: list[str]) -> list[str]:
+    consolidated_rules = consolidate_rules(rules)
+
     filtered = []
 
     for candidate in candidates:
-        if match_scheme_comparison(candidate, word_list, rules):
+        if match_scheme_comparison(candidate, word_list, consolidated_rules):
             filtered.append(candidate)
 
     return filtered
