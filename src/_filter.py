@@ -131,15 +131,64 @@ def match(word, guess, result, scheme='performance'):
 # -------------------------------
 
 def filter_candidates_by_comparison(candidates: list[str], word_list: list[str], rules: list[str]) -> list[str]:
+    """
+    Finds the largest rule subset that yields at least one valid candidate.
+    Gradually weakens rules if no results are found.
+    """
     consolidated_rules = consolidate_rules(rules)
+    best_result = []
+    best_rule_count = 0
 
-    filtered = []
+    n = len(consolidated_rules)
 
-    for candidate in candidates:
-        if match_scheme_comparison(candidate, word_list, consolidated_rules):
-            filtered.append(candidate)
+    if n == 0:
+        return candidates
 
-    return filtered
+    for size in range(n, 0, -1):
+        local_best = []
+        local_rules = []
+
+        for i in range(0, n - size + 1):
+            subset = consolidated_rules[i:i+size]
+            try:
+                subset_results = [
+                    cand for cand in candidates
+                    if match_scheme_comparison(cand, word_list, subset)
+                ]
+
+            except IndexError:
+                continue
+
+            if subset_results:
+                if len(subset) > best_rule_count:
+                    best_result = subset_results
+                    best_rule_count = len(subset)
+                    local_best = subset_results
+                    local_rules = subset
+
+        if local_best:
+            print(f"Optimized: used {len(local_rules)} rules, produced {len(local_best)} results.")
+            return sorted(local_best)
+
+    fallback = []
+    for rule in consolidated_rules:
+        try:
+            matched = [
+                cand for cand in candidates
+                if match_scheme_comparison(cand, word_list, [rule])
+            ]
+
+            if matched:
+                fallback.extend(matched)
+
+        except IndexError:
+            continue
+
+    if fallback:
+        print("Fallback: results found using single rules.")
+        return sorted(set(fallback))
+
+    raise ValueError("No valid candidates found for any rule combination.")
 
 def filter_words(words, guesses, scheme='performance'):
     """
