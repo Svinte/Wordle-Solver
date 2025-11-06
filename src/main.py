@@ -1,4 +1,5 @@
 from _filter import filter_words, filter_candidates_by_comparison
+from _contains import filter_contains
 from _common import top_letters
 from _score import score_words
 import csv
@@ -28,11 +29,11 @@ comparing = [
 ]
 
 contains = [
-    # eg. "a"
+    # eg. "a|b|c**1"
 ]
 
-candidates = [ans for ans in answers if all(k in ans for k in contains)]
-candidates = [w for w in candidates if w not in past_answers]
+candidates = [w for w in answers if w not in past_answers]
+candidates = filter_contains(candidates, contains)
 candidates = filter_words(candidates, guesses)
 candidates = filter_candidates_by_comparison(candidates, all_possible_inputs, comparing)
 
